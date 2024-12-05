@@ -1,0 +1,1659 @@
+openapi: 3.0.0
+info:
+  title: API Documentation
+  version: 1.0.0
+  description: This is the API documentation for usof.
+
+servers:
+  - url: http://localhost:5000
+
+paths:
+  /api/auth/register:
+    post:
+      summary: Register a new user
+      tags: ['Authentication']
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                login:
+                  type: string
+                  example: user123
+                password:
+                  type: string
+                  example: password123
+                confirmPass:
+                  type: string
+                  example: password123
+                email:
+                  type: string
+                  example: user@gmail.com
+      responses:
+        '200':
+          description: Please check your email to confirm
+        '400':
+          description: Invalid input, fields are required or passwords do not match
+
+  /api/auth/login:
+    post:
+      summary: Log in a user
+      tags: ['Authentication']
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                login:
+                  type: string
+                  example: user123
+                password:
+                  type: string
+                  example: password123
+                email:
+                  type: string
+                  example: user@gmail.com
+      responses:
+        '200':
+          description: Logged in successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Logged in successfully
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzI5NzAwMDc1LCJleHAiOjE3Mjk3ODY0NzV9.Tyd5fbiOzI3V33KFr-ZkrbgKczUMKFJWoEhqhwHTuTM
+        '400':
+          description: Invalid input, fields are required
+        '401':
+          description: Invalid password
+        '404':
+          description: User not found
+        '500':
+          description: Please confirm your email
+
+  /api/auth/logout:
+    post:
+      summary: Log out a user
+      tags: ['Authentication']
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: Logged out successfully
+        '401':
+          description: Invalid token
+
+  /api/auth/password-reset:
+    post:
+      summary: Request password reset
+      tags: ['Authentication']
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: user@gmail.com
+      responses:
+        '200':
+          description: Password reset link sent to email
+        '400':
+          description: Email is required
+        '404':
+          description: User not found
+
+  /api/auth/password-reset/{token}:
+    post:
+      summary: Confirm password reset
+      tags: ['Authentication']
+      parameters:
+        - name: token
+          in: path
+          required: true
+          description: Password reset token
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newPass:
+                  type: string
+                  example: newpassword123
+      responses:
+        '200':
+          description: Password updated successfully
+        '400':
+          description: New password is required
+        '401':
+          description: Invalid or expired token
+
+  /api/auth/confirm-email/{token}:
+    get:
+      summary: Confirm user email
+      tags: ['Authentication']
+      parameters:
+        - name: token
+          in: path
+          required: true
+          description: Email confirmation token
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Your email has been confirmed successfully!
+        '401':
+          description: Invalid token
+        '404':
+          description: User not found
+
+  /api/users:
+    get:
+      summary: Retrieve all users
+      tags: ['User']
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    login:
+                      type: string
+                    password:
+                      type: string
+                    full_name:
+                      type: string
+                    email:
+                      type: string
+                    is_confirmed:
+                      type: integer
+                      enum: [0, 1]
+                    profile_picture:
+                      type: string
+                      example: default-avatar.png
+                    rating:
+                      type: integer
+                    role:
+                      type: string
+                      enum: ['user', 'admin']
+        '401':
+          description: Unauthorized - User not authenticated
+        '403':
+          description: Forbidden - User is not an admin
+
+    post:
+      summary: Create a new user
+      tags: ['User']
+      security:
+        - JWT: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                login:
+                  type: string
+                  example: user123
+                password:
+                  type: string
+                  example: password123
+                confirmPass:
+                  type: string
+                  example: password123
+                email:
+                  type: string
+                  example: user@gmail.com
+                role:
+                  type: string
+                  example: admin
+      responses:
+        '201':
+          description: User created successfully
+        '400':
+          description: Invalid input, fields are required
+        '500':
+          description: Error creating user
+
+  /api/users/{id}:
+    get:
+      summary: Retrieve a specified user by ID
+      tags: ['User']
+      security:
+       - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the user to retrieve
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  login:
+                    type: string
+                  password:
+                    type: string
+                  full_name:
+                    type: string
+                  email:
+                    type: string
+                  is_confirmed:
+                    type: integer
+                    enum: [0, 1]
+                  profile_picture:
+                    type: string
+                    example: default-avatar.png
+                  rating:
+                    type: integer
+                  role:
+                    type: string
+                    enum: ['user', 'admin']
+        '404':
+          description: User not found
+        '401':
+          description: Unauthorized - User not authenticated
+        '403':
+          description: Forbidden - User is not an admin
+
+    patch:
+      summary: Update a specified user's data
+      tags: ['User']
+      security:
+       - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the user to update
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                login:
+                  type: string
+                password:
+                  type: string
+                email:
+                  type: string
+                role:
+                  type: string
+      responses:
+        '200':
+          description: User data updated successfully
+        '404':
+          description: User not found
+        '400':
+          description: Invalid input, fields are required
+
+    delete:
+      summary: Delete a specified user by ID
+      tags: ['User']
+      security:
+       - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the user to delete
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User deleted successfully
+        '404':
+          description: User not found
+        '401':
+          description: Unauthorized - User not authenticated
+        '403':
+          description: Forbidden - User is not an admin
+
+  /api/users/avatar:
+    patch:
+      summary: Upload a new avatar for the authenticated user
+      tags: ['User']
+      security:
+        - JWT: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                  example: /path/to/avatar.jpg
+      responses:
+        '200':
+          description: Avatar uploaded successfully
+        '404':
+          description: Avatar not found or user not found
+        '500':
+          description: An error occurred while uploading the avatar
+
+  /api/categories:
+    get:
+      summary: Retrieve all categories
+      tags: ['Category']
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: A list of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    title:
+                      type: string
+                    description:
+                      type: string
+        '401':
+          description: Unauthorized - User not authenticated
+    post:
+      summary: Create a new category
+      tags: ['Category']
+      security:
+        - JWT: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: New Category Title
+      responses:
+        '201':
+          description: Category created successfully
+        '400':
+          description: Invalid input, title is required
+        '401':
+          description: Unauthorized - User not authenticated
+        '403':
+          description: Forbidden - User is not an admin
+
+  /api/categories/{id}:
+    get:
+      summary: Retrieve a specified category by ID
+      tags: ['Category']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the category to retrieve
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Category data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  description:
+                      type: string
+        '404':
+          description: Category not found
+        '401':
+          description: Unauthorized - User not authenticated
+
+    patch:
+      summary: Update a specified category by ID
+      tags: ['Category']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the category to update
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                    type: string
+      responses:
+        '200':
+          description: Category updated successfully
+        '404':
+          description: Category not found
+        '400':
+          description: No data found
+        '403':
+          description: Forbidden - User is not an admin
+    delete:
+      summary: Delete a specified category by ID
+      tags: ['Category']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the category to delete
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Category deleted successfully
+        '404':
+          description: Category not found
+        '401':
+          description: Unauthorized - User not authenticated
+        '403':
+          description: Forbidden - User is not an admin
+
+  /api/categories/{id}/posts:
+    get:
+      summary: Retrieve posts associated with a specified category by ID
+      tags: ['Category']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the category to retrieve posts for
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Posts retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    author:
+                      type: integer
+                    title:
+                      type: string
+                    publish_date:
+                      type: string
+                      format: date-time
+                    status:
+                      type: string
+                      enum: ['active', 'inactive']
+                    content:
+                      type: string
+                    locked:
+                      type: integer
+                      enum: [0, 1]
+                    post_id:
+                      type: integer
+                    category_id:
+                      type: integer
+        '404':
+          description: Category not found
+        '401':
+          description: Unauthorized - User not authenticated
+
+  /api/comments/{id}:
+    get:
+      summary: Retrieve a specified comment by ID
+      tags: ['Comment']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the comment to retrieve
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Comment data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                      type: integer
+                  author:
+                      type: integer
+                  publish_date:
+                      type: string
+                      format: date-time
+                  content:
+                      type: string
+                  status:
+                      type: string
+                      enum: ['active', 'inactive']
+                  locked:
+                      type: integer
+                      enum: [0, 1]
+                  is_best:
+                      type: integer
+                      enum: [0, 1]
+        '404':
+          description: Comment not found
+        '401':
+          description: Unauthorized - User not authenticated
+    patch:
+      summary: Update a specified comment by ID
+      tags: ['Comment']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the comment to update
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+      responses:
+        '200':
+          description: Comment updated successfully
+        '404':
+          description: Comment not found
+        '403':
+          description: Permission denied - User is neither the comment creator nor an admin
+        '401':
+          description: Unauthorized - User not authenticated
+        '400':
+          description: No data found
+    delete:
+      summary: Delete a specified comment by ID
+      tags: ['Comment']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the comment to delete
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Comment deleted successfully
+        '404':
+          description: Comment not found
+        '403':
+          description: Permission denied - You cannot delete this comment
+        '401':
+          description: Unauthorized - User not authenticated
+
+  /api/comments/{id}/like:
+    get:
+      summary: Retrieve all likes for a specified comment by ID
+      tags: ['Comment']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the comment to retrieve likes for
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Likes retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    author:
+                      type: integer
+                    publish_date:
+                      type: string
+                      format: date-time
+                    post_id:
+                      type: integer
+                      nullable: true
+                    comment_id:
+                      type: integer
+                    type:
+                      type: string
+                      enum: ['like', 'dislike']
+        '404':
+          description: Comment not found
+        '401':
+          description: Unauthorized - User not authenticated
+    post:
+      summary: Create a new like for a specified comment by ID
+      tags: ['Comment']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the comment to like
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Like successfully created
+        '403':
+          description: You have already liked this comment or you cannot respond to this comment.
+        '404':
+          description: Comment not found
+        '401':
+          description: Unauthorized - User not authenticated
+
+    delete:
+      summary: Deletes a like for a specified comment by ID
+      tags: ['Comment']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the comment to delete the like from
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Like deleted successfully
+        '404':
+          description: Comment not found or like not found
+        '403':
+          description: You cannot respond to this comment
+        '401':
+          description: Unauthorized - User not authenticated
+
+  /api/comments/{id}/dislike:
+    get:
+      summary: Retrieve all dislikes for a specified comment
+      tags: ['Comment']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the comment to retrieve dislikes for
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Dislikes retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    author:
+                      type: integer
+                    publish_date:
+                      type: string
+                      format: date-time
+                    post_id:
+                      type: integer
+                      nullable: true
+                    comment_id:
+                      type: integer
+                    type:
+                      type: string
+                      enum: ['like', 'dislike']
+        '404':
+          description: Comment not found
+        '401':
+          description: Unauthorized - User not authenticated
+    post:
+      summary: Create a new dislike for a specified comment
+      tags: ['Comment']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the comment to dislike
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Dislike successfully created
+        '404':
+          description: Comment not found
+        '403':
+          description: You cannot respond to this comment or you have already disliked it 
+        '401':
+          description: Unauthorized - User not authenticated
+    delete:
+      summary: Delete a dislike for a specified comment
+      tags: ['Comment']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the comment to delete the dislike from
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Dislike deleted successfully
+        '404':
+          description: Comment or dislike not found
+        '403':
+          description: You cannot respond to this comment
+        '401':
+          description: Unauthorized - User not authenticated
+
+  /api/comments/{id}/lock:
+    patch:
+      summary: Lock a specified comment by ID
+      tags: ['Comment']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the comment to lock
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Comment locked successfully
+        '404':
+          description: Comment not found
+        '403':
+          description: You cannot lock this comment
+        '401':
+          description: Unauthorized - User not authenticated
+
+  /api/comments/{id}/unlock:
+    patch:
+      summary: Unlock a specified comment by ID
+      tags: ['Comment']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the comment to unlock
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Comment unlocked successfully
+        '404':
+          description: Comment not found
+        '403':
+          description: This comment has already been unlocked
+        '401':
+          description: Unauthorized - User not authenticated
+
+  /api/posts/{postId}/comments/{commentId}:
+    patch:
+      summary: Choose the best comment for a specified post
+      tags: ['Comment']
+      security:
+        - JWT: []
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          description: ID of the post
+          schema:
+            type: integer
+        - name: commentId
+          in: path
+          required: true
+          description: ID of the comment to choose as the best
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Best comment chosen successfully
+        '404':
+          description: Post or comment not found
+        '403':
+          description: Only the author of the post can choose the best comment
+        '401':
+          description: Unauthorized - User not authenticated
+        '500':
+          description: Error while choosing the best comment
+
+  /api/posts:
+    get:
+      summary: Retrieve all posts with optional filtering, sorting, and pagination
+      tags: ['Post']
+      parameters:
+        - name: page
+          in: query
+          description: Page number for pagination
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: sort
+          in: query
+          description: Sort order for posts
+          required: false
+          schema:
+            type: string
+        - name: categories
+          in: query
+          description: Filter by categories
+          required: false
+          schema:
+            type: string
+        - name: dateInterval
+          in: query
+          description: Filter by date interval
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Filter by post status
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                        type: integer
+                    author:
+                        type: integer
+                    title:
+                        type: string
+                    publish_date:
+                        type: string
+                        format: date-time
+                    status:
+                        type: string
+                        enum: ['active', 'inactive']
+                    content:
+                        type: string
+                    locked:
+                        type: integer
+                    likes_count:
+                        type: integer
+        '401':
+          description: Invalid token
+    post:
+      summary: Create a new post
+      tags: ['Post']
+      security:
+        - JWT: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+                categories:
+                  type: string
+      responses:
+        '200':
+          description: Post created successfully
+        '400':
+          description: Fields are required
+        '401':
+          description: Unauthorized - User not authenticated
+
+  /api/posts/{id}:
+    get:
+      summary: Retrieve a specified post by ID
+      tags: ['Post']
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the post to retrieve
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Post data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  author:
+                      type: integer
+                  title:
+                      type: string
+                  publish_date:
+                      type: string
+                      format: date-time
+                  status:
+                      type: string
+                      enum: ['active', 'inactive']
+                  content:
+                      type: string
+                  locked:
+                      type: integer
+        '404':
+          description: Post not found
+    patch:
+      summary: Update a specified post by ID
+      tags: ['Post']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the post to update
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+                status:
+                  type: string
+                  enum: ['active', 'inactive']
+                category:
+                  type: string
+                  example: css
+      responses:
+        '200':
+          description: Post updated successfully
+        '404':
+          description: Post not found
+        '403':
+          description: You did not create this post
+        '400':
+          description: No data found
+        '401':
+          description: Unauthorized - User not authenticated
+    delete:
+      summary: Delete a specified post by ID
+      tags: ['Post']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the post to delete
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Post deleted successfully
+        '404':
+          description: Post not found
+        '403':
+          description: You cannot delete this post
+        '401':
+          description: Unauthorized - User not authenticated
+
+  /api/posts/{id}/subscribe:
+    post:
+      summary: Subscribe to a specified post
+      tags: ['Post']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the post to subscribe
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Subscribed to post successfully
+        '404':
+          description: Post not found
+        '403':
+          description: You are not authorized to subscribe to this post
+
+  /api/posts/{id}/unsubscribe:
+    delete:
+      summary: Unsubscribe from a specified post
+      tags: ['Post']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the post to unsubscribe from
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Unsubscribed successfully
+        '404':
+          description: Post not found
+        '403':
+          description: You are not authorized to unsubscribe from this post
+
+  /api/notifications:
+    get:
+      summary: Retrieve all notifications for the authenticated user
+      tags: ['Post']
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: A list of notifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    user_id:
+                      type: integer
+                    post_id:
+                      type: integer
+                      nullable: true
+                    comment_id:
+                      type: integer
+                      nullable: true
+                    message:
+                      type: string
+                    created_at:
+                      type: string
+                      format: date-time
+                    is_read:
+                      type: integer
+                      enum: [0, 1]
+                    read_at:
+                      type: string
+                      format: date-time
+        '401':
+          description: Unauthorized - User not authenticated
+
+  /api/posts/favorites:
+    get:
+      summary: Retrieve favorite posts of the authenticated user
+      tags: ['Post']
+      security:
+        - JWT: []
+      parameters:
+        - name: page
+          in: query
+          description: Page number for pagination
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: sort
+          in: query
+          description: Sort order for favorite posts
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of favorite posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    author:
+                      type: integer
+                    title:
+                      type: string
+                    publish_date:
+                      type: string
+                      format: date-time
+                    status:
+                      type: string
+                    content:
+                      type: string
+                    locked:
+                      type: integer
+                    likes_count:
+                      type: integer
+        '401':
+          description: Unauthorized - User not authenticated
+
+  /api/posts/subscriptions:
+    get:
+      summary: Retrieve all subscriptions of the authenticated user
+      tags: ['Post']
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: A list of subscriptions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    author:
+                      type: integer
+                    title:
+                      type: string
+                    publish_date:
+                      type: string
+                      format: date-time
+                    status:
+                      type: string
+                    content:
+                      type: string
+                    locked:
+                      type: integer
+        '401':
+          description: Unauthorized - User not authenticated
+
+  /api/posts/{id}/comments:
+    get:
+      summary: Retrieve comments for a specified post by ID
+      tags: ['Post']
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the post to retrieve comments for
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Comments retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    author:
+                      type: integer
+                    publish_date:
+                      type: string
+                      format: date-time
+                    content:
+                      type: string
+                    status:
+                      type: string
+                    locked:
+                      type: integer
+                    is_best:
+                      type: integer
+                      enum: [0, 1]
+                    post_id:
+                      type: integer
+                      nullable: true
+                    comment_id:
+                      type: integer
+                      nullable: true
+        '404':
+          description: Post not found
+        '401':
+          description: Invalid token
+    post:
+      summary: Create a new comment on a specified post
+      tags: ['Post']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the post to comment on
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+      responses:
+        '200':
+          description: Comment created successfully
+        '404':
+          description: Post not found
+        '403':
+          description: You cannot comment on this post
+        '400':
+          description: No content found
+        '401':
+          description: Unauthorized - User not authenticated
+
+  /api/posts/{id}/like:
+    get:
+      summary: Retrieve likes for a specified post by ID
+      tags: ['Post']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the post to retrieve likes for
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Likes retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    author:
+                      type: integer
+                    publish_date:
+                      type: string
+                      format: date-time
+                    post_id:
+                      type: integer
+                      nullable: true
+                    comment_id:
+                      type: integer
+                      nullable: true
+                    type:
+                      type: string
+                      enum: ['like', 'dislike']
+        '404':
+          description: Post not found
+        '401':
+          description: Unauthorized - User not authenticated
+    post:
+      summary: Create a new like for a specified post
+      tags: ['Post']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the post to like
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Like created successfully
+        '404':
+          description: Post not found
+        '403':
+          description: You cannot like this post or you have already liked it
+        '401':
+          description: Unauthorized - User not authenticated
+    delete:
+      summary: Remove a like from a specified post
+      tags: ['Post']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the post to remove like from
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Like removed successfully
+        '404':
+          description: Post not found
+        '403':
+          description: You cannot remove like from this post
+        '401':
+          description: Unauthorized - User not authenticated
+
+  /api/posts/{id}/dislike:
+    get:
+      summary: Retrieve dislikes for a specified post by ID
+      tags: ['Post']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the post to retrieve dislikes for
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Dislikes retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    author:
+                      type: integer
+                    publish_date:
+                      type: string
+                      format: date-time
+                    post_id:
+                      type: integer
+                      nullable: true
+                    comment_id:
+                      type: integer
+                      nullable: true
+                    type:
+                      type: string
+                      enum: ['like', 'dislike']
+        '404':
+          description: Post not found
+        '401':
+          description: Unauthorized - User not authenticated
+    post:
+      summary: Create a new dislike for a specified post
+      tags: ['Post']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the post to dislike
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Dislike created successfully
+        '404':
+          description: Post not found
+        '403':
+          description: You cannot dislike this post or you have already disliked this post
+        '401':
+          description: Unauthorized - User not authenticated
+    delete:
+      summary: Remove a dislike from a specified post
+      tags: ['Post']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the post to remove dislike from
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Dislike removed successfully
+        '404':
+          description: Post not found
+        '403':
+          description: You cannot remove dislike from this post
+        '401':
+          description: Unauthorized - User not authenticated
+
+  /api/posts/{id}/lock:
+    patch:
+      summary: Lock a specified post, preventing further comments or reactions
+      tags: ['Post']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the post to lock
+          schema:
+            type: integer
+
+      responses:
+        '200':
+          description: Post locked successfully
+        '404':
+          description: Post not found
+        '403':
+          description: You cannot lock this post
+        '401':
+          description: Unauthorized - User not authenticated
+
+  /api/posts/{id}/unlock:
+    patch:
+      summary: Unlock a specified post, allowing comments and reactions again
+      tags: ['Post']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the post to unlock
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Post unlocked successfully
+        '404':
+          description: Post not found
+        '403':
+          description: This post is already unlocked
+        '401':
+          description: Unauthorized - User not authenticated
+
+  /api/posts/{id}/favorites:
+    post:
+      summary: Add a specified post to the authenticated user's favorites
+      tags: ['Post']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the post to add to favorites
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Post added to favorites successfully
+        '404':
+          description: Post not found
+        '401':
+          description: Unauthorized - User not authenticated
+    delete:
+      summary: Remove a specified post from the authenticated user's favorites
+      tags: ['Post']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the post to remove from favorites
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Post removed from favorites successfully
+        '404':
+          description: Post not found
+        '401':
+          description: Unauthorized - User not authenticated
+
+  /api/notifications/{id}:
+    post:
+      summary: Mark a notification as read
+      tags: ['Post']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the notification to mark as read
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Notification marked as read successfully
+        '403':
+          description: You are not authorized to mark this notification
+
+  /api/posts/{id}/categories:
+    get:
+      summary: Retrieve categories for a specified post by ID
+      tags: ['Post']
+      security:
+        - JWT: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the post to retrieve categories for
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Categories retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    post_id:
+                      type: integer
+                    category_id:
+                      type: integer
+        '404':
+          description: Post not found
+        '401':
+          description: Unauthorized - User not authenticated
+
+components:
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

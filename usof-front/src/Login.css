@@ -1,0 +1,229 @@
+.login-input {
+  margin-bottom: 4%;
+  font-size: 18px;
+  padding: 4px 7px;
+  border-radius: 8px;
+  width: 47%;
+}
+
+.login-form {
+  padding: 2% 0;
+  margin-top: 7%;
+  margin-left: 37%;
+  border-radius: 8px;
+  border: solid 2px black;
+  width: 25%;
+  font-size: 18px;
+  text-align: center;
+}
+
+#register-form {
+  margin-top: 5%;
+  padding: 1% 0;
+  margin-left: 37%;
+  border-radius: 8px;
+  border: solid 2px black;
+  width: 25%;
+  font-size: 18px;
+  text-align: center;  
+}
+
+#login-btn {
+  width: 50%;
+  border-radius: 8px;
+  padding: 1% 0;
+  margin-bottom: 10%;
+  font-size: 18px;
+  background-color: #f7e0d0;
+}
+
+#login-girl, #register-girl {
+  position: absolute;
+  top: 24%;
+  left: 20%;
+}
+
+#register-girl {
+  top: 23%;
+}
+
+#form-header {
+ margin-left: 0px;
+ margin-bottom: 40px;
+}
+
+.login-label {
+ position: relative;
+ left: -20%;
+ text-align: left;
+}
+
+#pwd-label {
+  padding-left: 29px;
+}
+
+.a-login-form {
+  font-size: 16px;
+}
+
+#conf-pwd-label {
+  padding-left: 97px;
+}
+
+#new-pass {
+  padding-left: 70px;
+}
+
+#full-name-label {
+  padding-left: 35px;
+}
+
+#avatar-label {
+  padding-left: 11px;
+}
+
+#picture {
+  height: 50px;
+  width: 50px;
+}
+
+#edit-form {
+  margin-top: 75px;
+  height: 735px;
+}
+
+@media (max-width: 1500px) {
+  .login-form {
+    width: 35%;
+  }
+
+  #register-girl {
+    top: 22%;
+    left: 10%;
+  }
+}
+
+@media (max-width: 1310px) {
+  #login-girl {
+    top: 24%;
+    left: 14%; 
+  }
+
+  #register-girl {
+    top: 22%;
+    left: 10%;
+  }
+}
+
+@media (max-width: 1200px) {
+  .login-form {
+    width: 40%;
+  }
+  
+  #register-form {
+    width: 40%;
+  }
+}
+
+@media (max-width: 950px) {
+  .login-form {
+    width: 55%;
+  }
+
+  #register-form {
+    width: 50%;
+    margin-left: 25%;
+  }
+
+  #login-girl {
+    top: 24%;
+    left: 6%; 
+  }
+
+  #register-girl {
+    top: 32%;
+    left: 3%;
+  }
+}
+
+@media (max-width: 768px) {
+  .login-form {
+    width: 60%;
+    margin: 5% auto;
+  }
+
+  .login-label, .login-input {
+    font-size: 16px;
+  }
+
+  #login-btn {
+    padding: 8px 16px;
+    font-size: 16px;
+  }
+
+  .a-login-form {
+    font-size: 14px;
+  }
+
+  #register-form {
+    width: 60%;
+  }
+
+  #login-girl {
+    top: 24%;
+    left: 50%; 
+  }
+}
+
+@media (max-width: 660px) {
+  #login-girl {
+    top: 40%;
+    left: 30%; 
+  }
+
+  #register-girl {
+    top: 51%;
+    left: 17%;
+  }
+}
+
+
+@media (max-width: 530px) {
+  .login-form {
+    width: 70%;
+  }
+
+  .login-label, .login-input {
+    font-size: 14px;
+  }
+
+  .login-input {
+    padding: 6px;
+  }
+
+  #login-btn {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+
+  .a-login-form {
+    font-size: 12px;
+  }
+  
+  #register-form {
+    width: 70%;
+    margin-left: 15%;
+  }
+
+  #login-girl {
+    top: 40%;
+    left: 10%; 
+  }
+
+  #register-girl {
+    top: 51%;
+    left: 5%;
+  }
+}
+
+

@@ -1,0 +1,187 @@
+.form {
+  padding: 2% 0;
+  margin-top: 5%;
+  margin-left: 34%;
+  border-radius: 8px;
+  border: solid 2px black;
+  width: 30%;
+  text-align: center;
+}
+
+.edit-form {
+  margin-top: 2%;
+}
+
+.login-label, #title-input {
+  font-size: 18px;
+}
+
+.form-category {
+  font-size: 16px;
+}
+
+.form-cont {
+ margin-left: 14%;
+}
+
+#title-label {
+  margin-left: -9%;
+} 
+
+#content-label {
+  margin-top: 10%;
+  margin-left: -4%;
+}
+
+#status-label {
+  positon: absolute;
+  top: 30px;
+  margin-left: -6%;
+}
+
+#role-label {
+ margin-left: 16%;
+}
+
+.submit-btn {
+  margin-bottom: 30px !important;
+}
+
+#select-status, #select-role, #select-state {
+  margin-top: 5%;
+  border-radius: 8px;
+  font-size: 18px;
+}
+
+#select-role {
+  margin-top: -2%;
+  margin-bottom: 5%;
+}
+
+#select-role-edit {
+  positon: absolute;
+  top: 20px;
+}
+
+#desc-input {
+  font-size: 16px;
+  width: 42%;
+  margin-bottom: 10%;
+}
+
+#desc-label {
+  margin-left: 2%;
+}
+
+.e-toolbar-item {
+    min-width: 0 !important;
+    flex: 1 1 auto;
+}
+
+.e-toolbar-pop {
+    display: flex;
+    gap: 0px;
+    min-width: 0px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.e-tbar-btn {
+    margin: 0 0;
+}
+
+.e-control .e-richtexteditor .e-lib .e-rte-toolbar-enabled .e-focused {
+  padding: 30px;
+}
+
+.e-overlay {
+  background-color: transparent !important;
+  width: 6% !important;
+  pointer-events: none !important;
+}
+
+.e-control.e-richtexteditor {
+  width: 69% !important;
+  margin-top: 0%;
+  margin-left: 17%;
+  margin-bottom: 5%;
+}
+
+@media (max-width: 1500px) {
+  .form {
+    width: 35%; /* Зменшити ширину форми на менших екранах */
+    height: auto;
+  }
+}
+
+@media (max-width: 1200px) {
+  .form {
+    width: 40%;
+  }
+}
+
+@media (max-width: 950px) {
+  .form {
+    width: 55%;
+  }
+}
+
+/* Медіа-запити для респонсивності */
+@media (max-width: 768px) {
+  .form {
+    width: 60%; /* Зменшити ширину форми на менших екранах */
+    margin: 5% auto; /* Центрування */
+  }
+
+  .login-label, #title-input {
+    font-size: 16px; /* Зменшити розмір шрифту */
+  }
+
+  #title-input {
+    padding: 8px; /* Зменшити відступи */
+  }
+
+  .form-category {
+    font-size: 14px; /* Зменшити розмір шрифту для категорій */
+  }
+
+  #content-label {
+    margin-top: 5%; /* Зменшити відступи */
+  }
+
+  #login-btn {
+    padding: 8px 16px; /* Зменшити відступи для кнопки */
+    font-size: 16px; /* Зменшити розмір шрифту */
+  }
+
+  .a-login-form {
+    font-size: 14px; /* Зменшити розмір шрифту для посилання */
+  }
+}
+
+@media (max-width: 530px) {
+  .form {
+    width: 95%; /* Зменшити ширину форми ще більше */
+  }
+
+  .login-label, #title-input {
+    font-size: 14px; /* Додаткове зменшення розміру шрифту */
+  }
+
+  #title-input {
+    padding: 6px; /* Додаткове зменшення відступів */
+  }
+
+  .form-category {
+    font-size: 12px; /* Додаткове зменшення розміру шрифту для категорій */
+  }
+
+  #login-btn {
+    padding: 6px 12px; /* Додаткове зменшення відступів для кнопки */
+    font-size: 14px; /* Додаткове зменшення розміру шрифту */
+  }
+
+  .a-login-form {
+    font-size: 12px; /* Додаткове зменшення розміру шрифту для посилання */
+  }
+}

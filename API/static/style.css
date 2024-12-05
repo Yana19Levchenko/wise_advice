@@ -1,0 +1,158 @@
+body {
+  background-color: #faf5eb;
+}
+
+h1 {
+  text-align: center;
+}
+
+a {
+  font-size: 18px;
+  color: #ff9042;
+  text-decoration: none;
+  text-align: center;
+  display: block;
+}
+
+#cancel {
+  color: black;
+}
+
+.img-success {
+  margin-top: 15%;
+  width: 100%;
+}
+
+.login-input {
+  margin-bottom: 4%;
+  font-size: 18px;
+  padding: 4px 7px;
+  border-radius: 8px;
+  width: 47%;
+}
+
+.login-form {
+  padding: 2% 0;
+  margin-top: 7%;
+  margin-left: 37%;
+  border-radius: 8px;
+  border: solid 2px black;
+  width: 25%;
+  font-size: 18px;
+  text-align: center;
+}
+
+#register-form {
+  margin-top: 5%;
+  padding: 1% 0;
+  margin-left: 37%;
+  border-radius: 8px;
+  border: solid 2px black;
+  width: 25%;
+  font-size: 18px;
+  text-align: center;  
+}
+
+#login-btn {
+  width: 50%;
+  border-radius: 8px;
+  padding: 1% 0;
+  margin-bottom: 10%;
+  font-size: 18px;
+}
+
+#form-header {
+ margin-left: 0px;
+ margin-bottom: 40px;
+}
+
+#success-girl {
+  position: absolute;
+  bottom: 0;
+  left: 38%;
+}
+
+.login-label {
+ position: relative;
+ left: -20%;
+ text-align: left;
+}
+
+#new-pass {
+  margin-left: 60px;
+}
+
+@media (max-width: 1500px) {
+  .login-form {
+    width: 35%;
+  }
+}
+
+@media (max-width: 1200px) {
+  .login-form {
+    width: 40%;
+  }
+}
+
+@media (max-width: 950px) {
+  .login-form {
+    width: 55%;
+  }
+}
+
+@media (max-width: 768px) {
+  .login-form {
+    width: 60%;
+    margin: 5% auto;
+  }
+
+  .login-label, .login-input {
+    font-size: 16px;
+  }
+
+  #login-btn {
+    padding: 8px 16px;
+    font-size: 16px;
+  }
+
+  .a-login-form {
+    font-size: 14px;
+  }
+
+}
+
+@media(max-width: 700px) {
+  #success-girl {
+    left: 20%;
+  }
+}
+
+@media(max-width: 550px) {
+  #success-girl {
+    width: 40%;
+  }
+}
+
+@media (max-width: 530px) {
+  .login-form {
+    width: 70%;
+  }
+
+  .login-label, .login-input {
+    font-size: 14px;
+  }
+
+  .login-input {
+    padding: 6px;
+  }
+
+  #login-btn {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+
+  .a-login-form {
+    font-size: 12px;
+  }
+  
+}

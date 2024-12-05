@@ -1,0 +1,8 @@
+{
+  "options": {
+    "host": "localhost",
+    "user": "yana",
+    "password": "securepass",
+    "database": "qa_platform"
+  }
+}
